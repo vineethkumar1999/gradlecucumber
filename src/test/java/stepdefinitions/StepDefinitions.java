@@ -1,3 +1,5 @@
+package stepdefinitions;
+
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
@@ -20,9 +22,19 @@ public class StepDefinitions {
          System.out.println("Reached When");
     }
 
-    @Then("I see the output")
+    @When("I run the step {string}")
+    public void whenRunStepwithstring(String msg) {
+        System.out.println("Reached When"+msg);
+    }
+
+   @Then("I see the output")
     public void thenSeeOutput() {
         System.out.println("Reached Then");
+    }
+
+    @Then("I see the output2")
+    public void thenSeeOutput2() {
+        System.out.println("Reached Then2");
     }
 
     @After
