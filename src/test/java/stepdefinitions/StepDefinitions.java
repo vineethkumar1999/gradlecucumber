@@ -1,11 +1,14 @@
 package stepdefinitions;
 
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
+import io.cucumber.java.*;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+/**
+ * @author Vineeth
+ *
+ */
 public class StepDefinitions {
 
     @Before
@@ -40,5 +43,25 @@ public class StepDefinitions {
     @After
     public void endsetup(){
         System.out.println("Reached End Setup");
+    }
+
+//    @BeforeStep
+//    public void beforestep(Scenario scenario)
+//    {
+//        System.out.println("Before step in scenario: " + scenario.getName());
+//        System.out.println("Line Number: " + scenario.getLine());
+//    }
+
+    @BeforeStep("@test")
+    public void beforestepwithtag()
+    {
+        System.out.println("Before step in scenario: test");
+    }
+
+    @AfterStep("@test")
+    public void afterstep(Scenario scenario)
+    {
+        System.out.println("After step in scenario: test");
+        System.out.println("Before step in scenario: " + scenario.getName());
     }
 }

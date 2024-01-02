@@ -8,7 +8,7 @@ Feature: Sample feature
     Then I see the output
 
   @test2
-  Scenario: Sample scenario
+  Scenario: Sample scenario2
     Given I have a sample step
     When I run the step
     Then I see the output2

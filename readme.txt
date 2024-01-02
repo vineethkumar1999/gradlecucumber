@@ -72,5 +72,14 @@ you can also use --tags "@tag1 and @tag2" to run a scenario that has both tag1 a
 You can also Use hooks like @Before, @After, @BeforeStep, @AfterStep, @After("@step1 and not @step2") : COnditional hooks to run your methods
 before or after or even after certain step
 
+BeforeStep will run the content before each step in each scenario
+AfterStep will run the method content after each step in each scenario
+Conditional hooks use them with Before, After, BeforeStep, or AfterStep with ("@tags") to run them only when tags are matched
+
+I have added examples for all these feel free to add the tags in program arguments, run and see the result.
+
+
+
+
 
 
