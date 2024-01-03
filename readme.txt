@@ -79,6 +79,17 @@ Conditional hooks use them with Before, After, BeforeStep, or AfterStep with ("@
 I have added examples for all these feel free to add the tags in program arguments, run and see the result.
 
 
+UI Automation:
+
+Now that we have seen how we can write and run tests, lets move ahead and add basic test case where we open browser and search for cheese
+
+Here we are using firefox browser and you have to download corresponding firefox webdriver
+
+We have created a java class for accommodating step definitions of UI functionality.
+
+
+
+
 
 
 
