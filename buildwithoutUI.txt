@@ -12,9 +12,6 @@ repositories {
 dependencies {
     implementation 'io.cucumber:cucumber-java:7.15.0'
     implementation 'io.cucumber:cucumber-junit:7.15.0'
-    // Selenium WebDriver dependencies
-    testImplementation 'org.seleniumhq.selenium:selenium-java:4.4.0'
-    testImplementation 'org.seleniumhq.selenium:selenium-chrome-driver:4.4.0'
 }
 
 test {
