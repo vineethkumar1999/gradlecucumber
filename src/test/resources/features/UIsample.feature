@@ -7,3 +7,8 @@ Feature: This feature will contain example of how UI automation with cucumber wo
     Given I am on the Google search page
     When I search for "Cheese!"
     Then the page title should start with "cheese"
+    And I search for "Automation Exercise"
+    And I click on website
+    Then the page title should start with "automation"
+    
+
