@@ -2,13 +2,12 @@ package stepdefinitions;
 
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import io.cucumber.java.Scenario;
+import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -16,11 +15,13 @@ import io.cucumber.java.en.When;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 
 public class StepDefinitionsUI {
     WebDriver driver;
+
     @Before("@UITest")
     public void setupWebDriver() {
         System.out.println("Reached Before in UI");
@@ -63,7 +64,7 @@ public class StepDefinitionsUI {
     }
 
     @Then("I click on website")
-    public void iclicksite(){
+    public void iclicksite() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));  // Wait up to 10 seconds
 
         // Wait for element to be clickable and then send Enter key
@@ -75,9 +76,65 @@ public class StepDefinitionsUI {
         targetElement.click();
     }
 
+    @When("I click on login or Signup")
+    public void signup() {
+        driver.findElement(By.linkText("Signup / Login")).click();
+    }
+
+    @Then("I fill name and email")
+    public void signupform1() {
+        Random rand = new Random();
+        driver.findElement(By.xpath("//form/input[@name='name']")).sendKeys("Test" + rand.nextInt(1000));
+        driver.findElement(By.xpath("//form[@action='/signup']/input[@name='email']")).sendKeys("TestingABC" + rand.nextInt(1000) + "@gmail.com");
+        driver.findElement(By.xpath("//form[@action='/signup']/button")).click();
+    }
+
+    @Then("I fill the signupform")
+    public void signupform2() {
+        Random rand = new Random();
+        WebElement radio = driver.findElement(By.xpath("//input[@type='radio'][@value='Mr']"));
+        radio.click();
+        if (radio.isSelected())
+            System.out.println("Radio Button clicked");
+        driver.findElement(By.id("password")).sendKeys("Test@123");
+        WebElement days = driver.findElement(By.id("days"));
+        Select s = new Select(days);
+        s.selectByValue("31");
+        Select month = new Select(driver.findElement(By.id("months")));
+        month.selectByIndex(12);
+        Select year = new Select(driver.findElement(By.id("years")));
+        year.selectByVisibleText("1982");
+        driver.findElement(By.xpath("//input[@type=\"checkbox\" and contains(@id,'news')]")).click();
+        driver.findElement(By.id("first_name")).sendKeys("TestUser");
+        driver.findElement(By.id("last_name")).sendKeys("TestLast");
+        driver.findElement(By.id("address1")).sendKeys("Address");
+        Select country = new Select(driver.findElement(By.id("country")));
+        country.selectByIndex(4);
+        driver.findElement(By.id("state")).sendKeys("state");
+        driver.findElement(By.id("city")).sendKeys("city");
+        driver.findElement(By.id("zipcode")).sendKeys("56220");
+        driver.findElement(By.id("mobile_number")).sendKeys("8888888888");
+        driver.findElement(By.xpath("//button[text()='Create Account']")).click();
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement cont = wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.linkText("Continue"))));
+        cont.click();
+    }
+
     @After("@UITest")
     public void closeBrowser() {
         System.out.println("Reached UI After Method");
         driver.quit();
+    }
+    @After
+    public void embedScreenshot(Scenario scenario) {
+        if (scenario.isFailed()) {
+            try {
+                byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+                scenario.attach(screenshot, "image/png", "name");
+            } catch (Exception e) {
+                System.err.println("Exception while taking screenshot: " + e.getMessage());
+            }
+        }
     }
 }
