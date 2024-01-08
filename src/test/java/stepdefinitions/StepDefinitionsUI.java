@@ -5,6 +5,7 @@ import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -16,19 +17,20 @@ import io.cucumber.java.en.When;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 
 public class StepDefinitionsUI {
     WebDriver driver;
 
-    @Before("@UITest")
+    @Before("@UITest3")
     public void setupWebDriver() {
         System.out.println("Reached Before in UI");
         System.setProperty("webdriver.firefox.bin", "C:\\Program Files\\Mozilla Firefox\\firefox.exe");
         System.setProperty("webdriver.gecko.driver", "C:\\Users\\talar\\Downloads\\geckodriver-v0.33.0-win32\\geckodriver.exe"); // Set path for Firefox driver
         driver = new FirefoxDriver();
-//        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
     }
 
 
@@ -119,12 +121,77 @@ public class StepDefinitionsUI {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         WebElement cont = wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.linkText("Continue"))));
         cont.click();
+
     }
 
+    @When("I click on Products")
+    public void productAction(){
+        Actions act = new Actions(driver);
+        driver.manage().window().maximize();
+        WebElement e = driver.findElement(By.xpath("//a[text()=' Products']"));
+        act.moveToElement(e).click().perform();
+        WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(10));
+        WebElement kidsplus = wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//div[@id='Kids']/preceding-sibling::div//a"))));
+        act.moveToElement(kidsplus).doubleClick().perform();
+    }
+
+    @When("I search for {string} in amazon")
+    public void searchamazon(String item){
+        WebElement e = driver.findElement(By.id("twotabsearchtextbox"));
+        e.sendKeys(item);
+        e.sendKeys(Keys.ENTER);
+    }
+
+    @Then("Click on first item and open in new tab")
+    public void opentab()
+    {
+           Actions act = new Actions(driver);
+           WebElement item = driver.findElement(By.xpath("//a/span[contains(@class,'a-size-medium a-color-base a-text-normal') and starts-with(text(),'Soundcore Anker Life Q20')]"));
+           item.click();
+           driver.navigate().refresh();
+           driver.navigate().back();
+           driver.navigate().forward();
+    }
     @After("@UITest")
     public void closeBrowser() {
         System.out.println("Reached UI After Method");
         driver.quit();
+    }
+
+    @Given("I navigate to {string}")
+    public void iNavigate(String url)
+    {
+        System.out.println(url);
+        driver.get(url);
+    }
+
+    @When("I click on Click me Web element")
+    public void clickme()
+    {
+        driver.findElement(By.id("button1")).click();
+        driver.manage().window().maximize();
+        Set<String> windowHandles = driver.getWindowHandles();
+        System.out.println("Window Handles Size is" +windowHandles.size());
+        driver.get("https://webdriveruniversity.com/Popup-Alerts/index.html");
+        driver.findElement(By.id("button1")).click();
+        Alert alert = driver.switchTo().alert();
+        alert.accept();
+        driver.findElement(By.id("button2")).click();
+        windowHandles = driver.getWindowHandles();
+        System.out.println("Window Handles Size is" +windowHandles.size());
+        driver.get("https://webdriveruniversity.com/Actions/index.html");
+        Actions act = new Actions(driver);
+        act.dragAndDrop(driver.findElement(By.id("draggable")), driver.findElement(By.id("droppable"))).perform();
+        act.moveToElement(driver.findElement(By.id("double-click"))).doubleClick().perform();
+        act.moveToElement(driver.findElement(By.xpath("//button[contains(text(),'Hover Over Me First!')]"))).perform();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement link1 = wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Link 1")));
+        link1.click();
+        alert = driver.switchTo().alert();
+        alert.accept();
+        act.moveToElement(driver.findElement(By.id("click-box"))).clickAndHold().release().perform();
+        driver.get("https://webdriveruniversity.com/File-Upload/index.html");
+        driver.findElement(By.id("myFile")).sendKeys("E:\\GitLocal\\gradlecucumber\\buildwithoutUI.txt");
     }
     @After
     public void embedScreenshot(Scenario scenario) {
